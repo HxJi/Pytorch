@@ -253,7 +253,7 @@ def main_worker(gpu, ngpus_per_node, args):
                 'state_dict': model.state_dict(),
                 'best_acc1': best_acc1,
                 'optimizer' : optimizer.state_dict(),
-            }, is_best)
+            }, is_best, epoch+1)
 
 
 def train(train_loader, model, criterion, optimizer, epoch, args):
@@ -342,7 +342,8 @@ def validate(val_loader, model, criterion, args):
     return top1.avg
 
 
-def save_checkpoint(state, is_best, filename='checkpoint.pth.tar'):
+def save_checkpoint(state, is_best, epoch):
+    filename = os.path.join("/home/gpu/resnet-checkpoint/","resnet_"+str(epoch)+"_weight.pth")
     torch.save(state, filename)
     if is_best:
         shutil.copyfile(filename, 'model_best.pth.tar')
